@@ -9,6 +9,7 @@ router.get('/tw', function(req, res){
         const response = await fetch(s);
         if (response.ok) {
             const body = await response.json();
+            console.log(body);
             if(typeof cb === 'function') cb(body);
         }
         else {
@@ -21,11 +22,21 @@ router.get('/tw', function(req, res){
     }
     requestPrice(url, (body)=>{
         console.log(body);
-        let responseToClient = {
-            'status': 'success',
-            'price': body['msgArray'][0]['pz']
+        if(!body) {
+            let responseToClient = {
+                'status': 'success',
+                'price': body['msgArray'][0]['pz']
+            }
+            res.send(responseToClient);
         }
-        res.send(responseToClient);
+        else {
+            let responseToClient = {
+                'status': 'error',
+                'price': 'body is undefined.'
+            }
+            res.send(responseToClient);
+        }
+        
     });
     
 });
