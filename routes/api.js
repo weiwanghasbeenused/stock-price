@@ -3,7 +3,13 @@ const router = express.Router()
 
 router.get('/tw', function(req, res){
     let stock = req.query.stock;
-    console.log(stock);
+    if(!stock) {
+        let responseToClient = {
+            'status': 'error',
+            'price': 'fail to find stock number from the query string'
+        }
+        res.send(responseToClient);
+    }
     let url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?json=1&delay=0&ex_ch=tse_" + stock + ".tw";
     async function requestPrice(s, cb){
         const response = await fetch(s);
