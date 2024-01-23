@@ -27,8 +27,7 @@ router.get('/tw', function(req, res){
         }
     }
     requestPrice(url, (body)=>{
-        console.log(body);
-        if(!body) {
+        if(body) {
             let responseToClient = {
                 'status': 'success',
                 'price': body['msgArray'][0]['pz']
