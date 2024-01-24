@@ -37,6 +37,10 @@ router.get('/tw', function(req, res){
                 res.send(responseToClient);
             }
         })
+        .catch(err => {
+            console.log(err)
+            res.send({ err }) // <= send error
+        })
     // async function requestPrice(s, cb){
     //     const response = await fetch(s);
     //     if (response.ok) {
