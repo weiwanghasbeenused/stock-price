@@ -6,7 +6,7 @@ router.get('/tw', function(req, res){
     if(!stock) {
         let responseToClient = {
             'status': 'error',
-            'price': 'fail to find stock number from the query string'
+            'message': 'fail to find stock number from the query string'
         }
         res.send(responseToClient);
     }
@@ -21,7 +21,7 @@ router.get('/tw', function(req, res){
         else {
             let responseToClient = {
                 'status': 'error',
-                'price': '!response.ok'
+                'message': '!response.ok'
             }
             res.send(responseToClient);
         }
@@ -30,14 +30,17 @@ router.get('/tw', function(req, res){
         if(body) {
             let responseToClient = {
                 'status': 'success',
-                'price': body['msgArray'][0]['z']
+                'body': {
+                    'price': body['msgArray'][0]['z'],
+                    'updated': body['msgArray'][0]['tlong']
+                }
             }
             res.send(responseToClient);
         }
         else {
             let responseToClient = {
                 'status': 'error',
-                'price': 'body is undefined.'
+                'message': 'body is undefined.'
             }
             res.send(responseToClient);
         }
