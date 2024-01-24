@@ -15,6 +15,7 @@ router.get('/tw', function(req, res){
         const response = await fetch(s);
         if (response.ok) {
             const body = await response.json();
+            console.log(body);
             if(typeof cb === 'function') cb(body);
         }
         else {
