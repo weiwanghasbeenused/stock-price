@@ -4,6 +4,7 @@ const axios = require("axios");
 
 router.get('/tw', function(req, res){
     let stock = req.query.stock;
+    console.log('stock=' + stock);
     if(!stock) {
         let responseToClient = {
             'status': 'error',
@@ -12,9 +13,11 @@ router.get('/tw', function(req, res){
         res.send(responseToClient);
     }
     let url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?json=1&delay=0&ex_ch=tse_" + stock + ".tw";
+    console.log('requesting ' + url + ' axios . . .');
     axios(url)
-        .then(response => response.data)
-        .then(body => {
+        .then(response => {
+            console.log('got response ');
+            let body = response.data;
             console.log(body);
             if(body) {
                 let responseToClient = {
