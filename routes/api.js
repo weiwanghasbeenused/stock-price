@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const axios = require("axios");
 
 router.get('/tw', function(req, res){
     let stock = req.query.stock;
@@ -11,41 +12,63 @@ router.get('/tw', function(req, res){
         res.send(responseToClient);
     }
     let url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?json=1&delay=0&ex_ch=tse_" + stock + ".tw";
-    async function requestPrice(s, cb){
-        const response = await fetch(s);
-        if (response.ok) {
-            const body = await response.json();
+    axios(url)
+        .then(response => response.data)
+        .then(body => {
             console.log(body);
-            if(typeof cb === 'function') cb(body);
-        }
-        else {
-            let responseToClient = {
-                'status': 'error',
-                'message': '!response.ok'
-            }
-            res.send(responseToClient);
-        }
-    }
-    requestPrice(url, (body)=>{
-        if(body) {
-            let responseToClient = {
-                'status': 'success',
-                'body': {
-                    'price': body['msgArray'][0]['z'],
-                    'updated': body['msgArray'][0]['tlong']
+            if(body) {
+                let responseToClient = {
+                    'status': 'success',
+                    'body': {
+                        'price': body['msgArray'][0]['z'],
+                        'updated': body['msgArray'][0]['tlong']
+                    }
                 }
+                res.send(responseToClient);
             }
-            res.send(responseToClient);
-        }
-        else {
-            let responseToClient = {
-                'status': 'error',
-                'message': 'body is undefined.'
+            else {
+                let responseToClient = {
+                    'status': 'error',
+                    'message': 'body is undefined.'
+                }
+                res.send(responseToClient);
             }
-            res.send(responseToClient);
-        }
+        })
+    // async function requestPrice(s, cb){
+    //     const response = await fetch(s);
+    //     if (response.ok) {
+    //         const body = await response.json();
+    //         console.log(body);
+    //         if(typeof cb === 'function') cb(body);
+    //     }
+    //     else {
+    //         let responseToClient = {
+    //             'status': 'error',
+    //             'message': '!response.ok'
+    //         }
+    //         res.send(responseToClient);
+    //     }
+    // }
+    // requestPrice(url, (body)=>{
+    //     if(body) {
+    //         let responseToClient = {
+    //             'status': 'success',
+    //             'body': {
+    //                 'price': body['msgArray'][0]['z'],
+    //                 'updated': body['msgArray'][0]['tlong']
+    //             }
+    //         }
+    //         res.send(responseToClient);
+    //     }
+    //     else {
+    //         let responseToClient = {
+    //             'status': 'error',
+    //             'message': 'body is undefined.'
+    //         }
+    //         res.send(responseToClient);
+    //     }
         
-    });
+    // });
     
 });
 // router.post('/add/media', upload.array('media'), function(req, res){
